@@ -1,0 +1,5 @@
+[project]
+name = "inventory"
+version = "0.1.0"
+description = "A tiny inventory tracker used for practicing with Claude Code"
+requires-python = ">=3.10"
