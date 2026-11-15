@@ -98,5 +98,6 @@ class TestValidation(unittest.TestCase):
             with self.subTest(price=bad), self.assertRaises(ValueError):
                 Item("X1", "Bad", 1, bad)
 
+
 if __name__ == "__main__":
     unittest.main()
