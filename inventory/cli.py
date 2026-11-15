@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pathlib import Path
 
 from .models import Item
@@ -38,14 +39,20 @@ def main(argv=None):
         inv.add_item(Item(args.sku, args.name, args.quantity, args.price, args.category))
         inv.save(args.file)
     elif args.command == "remove":
-        inv.remove_item(args.sku, args.quantity)
+        try:
+            inv.remove_item(args.sku, args.quantity)
+        except (KeyError, ValueError) as e:
+            # KeyError's str() adds quotes, so use the original message.
+            print(f"error: {e.args[0]}", file=sys.stderr)
+            return 1
         inv.save(args.file)
     elif args.command == "list":
         for item in inv.items.values():
             print(f"{item.sku}\t{item.name}\t{item.quantity}\t${item.price:.2f}")
     elif args.command == "report":
         print(build_report(inv))
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
