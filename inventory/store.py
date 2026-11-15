@@ -20,6 +20,10 @@ class Inventory:
         if sku not in self.items:
             raise KeyError(f"Unknown SKU: {sku}")
         item = self.items[sku]
+        if quantity > item.quantity:
+            raise ValueError(
+                f"Cannot remove {quantity} of {sku}: only {item.quantity} in stock"
+            )
         item.quantity -= quantity
         if item.quantity == 0:
             del self.items[sku]
@@ -29,7 +33,7 @@ class Inventory:
 
     def low_stock(self, threshold=5):
         """Return items whose quantity is at or below the threshold."""
-        return [i for i in self.items.values() if i.quantity < threshold]
+        return [i for i in self.items.values() if i.quantity <= threshold]
 
     def search(self, text):
         """Find items whose name contains text, ignoring case."""
