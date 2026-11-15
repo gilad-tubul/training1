@@ -51,5 +51,48 @@ class TestInventory(unittest.TestCase):
         self.assertEqual(loaded.items, inv.items)
 
 
+class TestValidation(unittest.TestCase):
+    # Bug 1: negative quantity on add
+    def test_item_rejects_negative_quantity(self):
+        with self.assertRaises(ValueError):
+            Item("N1", "Negative", -3, 1.00)
+
+    def test_add_negative_quantity_leaves_inventory_unchanged(self):
+        inv = sample()
+        with self.assertRaises(ValueError):
+            inv.add_item(Item("A1", "Blue Widget", -3, 2.50, "widgets"))
+        self.assertEqual(inv.items["A1"].quantity, 10)
+
+    # Bug 2: negative quantity on remove
+    def test_remove_negative_quantity_raises(self):
+        inv = sample()
+        with self.assertRaises(ValueError):
+            inv.remove_item("A1", -10)
+        self.assertEqual(inv.items["A1"].quantity, 10)
+
+    # Bug 3: negative price
+    def test_item_rejects_negative_price(self):
+        with self.assertRaises(ValueError):
+            Item("P1", "Cheap", 1, -9.00)
+
+    def test_zero_price_is_allowed(self):
+        self.assertEqual(Item("F1", "Freebie", 1, 0.0).price, 0.0)
+
+    # Bug 4: same SKU with different details
+    def test_add_same_sku_different_name_raises(self):
+        inv = sample()
+        with self.assertRaises(ValueError):
+            inv.add_item(Item("A1", "Gadget", 1, 2.50, "widgets"))
+        self.assertEqual(inv.items["A1"].name, "Blue Widget")
+        self.assertEqual(inv.items["A1"].quantity, 10)
+
+    def test_add_same_sku_different_price_raises(self):
+        inv = sample()
+        with self.assertRaises(ValueError):
+            inv.add_item(Item("A1", "Blue Widget", 1, 99.00, "widgets"))
+        self.assertEqual(inv.items["A1"].price, 2.50)
+        self.assertEqual(inv.items["A1"].quantity, 10)
+
+
 if __name__ == "__main__":
     unittest.main()

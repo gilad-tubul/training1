@@ -36,7 +36,11 @@ def main(argv=None):
     inv = _load(args.file)
 
     if args.command == "add":
-        inv.add_item(Item(args.sku, args.name, args.quantity, args.price, args.category))
+        try:
+            inv.add_item(Item(args.sku, args.name, args.quantity, args.price, args.category))
+        except ValueError as e:
+            print(f"error: {e}", file=sys.stderr)
+            return 1
         inv.save(args.file)
     elif args.command == "remove":
         try:

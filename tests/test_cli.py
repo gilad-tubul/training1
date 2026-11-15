@@ -41,6 +41,12 @@ class TestCliErrors(unittest.TestCase):
         code, err = self.run_cli("remove", "A1", "2")
         self.assertEqual((code, err), (0, ""))
 
+    def test_add_invalid_item_prints_error(self):
+        code, err = self.run_cli("add", "B1", "Bolt", "-5", "0.10")
+        self.assertEqual(code, 1)
+        self.assertTrue(err.startswith("error: "), err)
+        self.assertNotIn("B1", Path(self.file).read_text())
+
 
 if __name__ == "__main__":
     unittest.main()

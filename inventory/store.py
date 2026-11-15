@@ -12,7 +12,13 @@ class Inventory:
 
     def add_item(self, item):
         if item.sku in self.items:
-            self.items[item.sku].quantity += item.quantity
+            existing = self.items[item.sku]
+            if (item.name, item.price) != (existing.name, existing.price):
+                raise ValueError(
+                    f"SKU {item.sku} is already {existing.name!r} at "
+                    f"${existing.price:.2f}; got {item.name!r} at ${item.price:.2f}"
+                )
+            existing.quantity += item.quantity
         else:
             self.items[item.sku] = item
 
@@ -20,6 +26,8 @@ class Inventory:
         if sku not in self.items:
             raise KeyError(f"Unknown SKU: {sku}")
         item = self.items[sku]
+        if quantity < 0:
+            raise ValueError(f"Cannot remove a negative quantity: {quantity}")
         if quantity > item.quantity:
             raise ValueError(
                 f"Cannot remove {quantity} of {sku}: only {item.quantity} in stock"
