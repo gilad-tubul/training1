@@ -33,7 +33,8 @@ class Inventory:
 
     def search(self, text):
         """Find items whose name contains text, ignoring case."""
-        return [i for i in self.items.values() if text in i.name]
+        needle = text.lower()
+        return [i for i in self.items.values() if needle in i.name.lower()]
 
     def save(self, path):
         data = [i.to_dict() for i in self.items.values()]
