@@ -93,6 +93,10 @@ class TestValidation(unittest.TestCase):
         self.assertEqual(inv.items["A1"].price, 2.50)
         self.assertEqual(inv.items["A1"].quantity, 10)
 
+    def test_item_rejects_nan_and_infinite_price(self):
+        for bad in (float("nan"), float("inf"), float("-inf")):
+            with self.subTest(price=bad), self.assertRaises(ValueError):
+                Item("X1", "Bad", 1, bad)
 
 if __name__ == "__main__":
     unittest.main()

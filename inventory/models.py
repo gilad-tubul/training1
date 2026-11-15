@@ -1,3 +1,4 @@
+import math
 from dataclasses import dataclass, asdict
 
 
@@ -12,8 +13,8 @@ class Item:
     def __post_init__(self):
         if self.quantity < 0:
             raise ValueError(f"Quantity cannot be negative: {self.quantity}")
-        if self.price < 0:
-            raise ValueError(f"Price cannot be negative: {self.price}")
+        if not math.isfinite(self.price) or self.price < 0:
+            raise ValueError(f"Price must be a non-negative number: {self.price}")
 
     def to_dict(self):
         return asdict(self)

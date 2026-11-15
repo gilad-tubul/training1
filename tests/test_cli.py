@@ -47,6 +47,27 @@ class TestCliErrors(unittest.TestCase):
         self.assertTrue(err.startswith("error: "), err)
         self.assertNotIn("B1", Path(self.file).read_text())
 
+    def test_add_nan_price_prints_error(self):
+        code, err = self.run_cli("add", "N1", "Thing", "1", "nan")
+        self.assertEqual(code, 1)
+        self.assertTrue(err.startswith("error: Price"), err)
+
+    def check_bad_file(self, content):
+        Path(self.file).write_text(content)
+        code, err = self.run_cli("list")
+        self.assertEqual(code, 1)
+        self.assertTrue(err.startswith(f"error: Could not load {self.file}: "), err)
+        self.assertEqual(err.count("\n"), 1, "expected a one-line error, not a traceback")
+
+    def test_invalid_saved_value_prints_error(self):
+        self.check_bad_file('[{"sku": "A", "name": "x", "quantity": -1, "price": 1}]')
+
+    def test_corrupt_json_prints_error(self):
+        self.check_bad_file("{not json")
+
+    def test_unknown_field_prints_error(self):
+        self.check_bad_file('[{"sku": "A", "name": "x", "quantity": 1, "price": 1, "colour": "red"}]')
+
 
 if __name__ == "__main__":
     unittest.main()

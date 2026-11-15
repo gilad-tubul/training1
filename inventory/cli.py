@@ -10,7 +10,13 @@ DEFAULT_FILE = "inventory.json"
 
 
 def _load(path):
-    return Inventory.load(path) if Path(path).exists() else Inventory()
+    if not Path(path).exists():
+        return Inventory()
+    try:
+        return Inventory.load(path)
+    except (KeyError, TypeError, ValueError) as e:
+        # Bad JSON, unknown/missing fields, or values that fail Item validation.
+        raise ValueError(f"Could not load {path}: {e}") from e
 
 
 def main(argv=None):
@@ -33,29 +39,29 @@ def main(argv=None):
     sub.add_parser("report", help="print a report grouped by category")
 
     args = parser.parse_args(argv)
+    try:
+        _run(args)
+    except (KeyError, ValueError) as e:
+        # Use args[0]: str() of a KeyError wraps the message in quotes.
+        print(f"error: {e.args[0]}", file=sys.stderr)
+        return 1
+    return 0
+
+
+def _run(args):
     inv = _load(args.file)
 
     if args.command == "add":
-        try:
-            inv.add_item(Item(args.sku, args.name, args.quantity, args.price, args.category))
-        except ValueError as e:
-            print(f"error: {e}", file=sys.stderr)
-            return 1
+        inv.add_item(Item(args.sku, args.name, args.quantity, args.price, args.category))
         inv.save(args.file)
     elif args.command == "remove":
-        try:
-            inv.remove_item(args.sku, args.quantity)
-        except (KeyError, ValueError) as e:
-            # KeyError's str() adds quotes, so use the original message.
-            print(f"error: {e.args[0]}", file=sys.stderr)
-            return 1
+        inv.remove_item(args.sku, args.quantity)
         inv.save(args.file)
     elif args.command == "list":
         for item in inv.items.values():
             print(f"{item.sku}\t{item.name}\t{item.quantity}\t${item.price:.2f}")
     elif args.command == "report":
         print(build_report(inv))
-    return 0
 
 
 if __name__ == "__main__":
