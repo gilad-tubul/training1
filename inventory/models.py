@@ -16,6 +16,11 @@ class Item:
         if not math.isfinite(self.price) or self.price < 0:
             raise ValueError(f"Price must be a non-negative number: {self.price}")
 
+    @property
+    def value(self):
+        """Total value of this stock line: quantity times unit price."""
+        return self.quantity * self.price
+
     def to_dict(self):
         return asdict(self)
 

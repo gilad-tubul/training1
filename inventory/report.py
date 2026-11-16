@@ -10,7 +10,7 @@ def build_report(inventory):
     for category, items in sorted(_group_by_category(inventory).items()):
         lines += ["", f"[{category}]"]
         lines += [_item_line(item) for item in items]
-        subtotal = sum(_value(item) for item in items)
+        subtotal = sum(item.value for item in items)
         lines.append(f"  subtotal: {_money(subtotal)}")
 
     lines += ["", f"TOTAL: {_money(inventory.total_value())}"]
@@ -28,12 +28,8 @@ def _group_by_category(inventory):
 def _item_line(item):
     return (
         f"  {item.name} ({item.sku}): "
-        f"{item.quantity} x {_money(item.price)} = {_money(_value(item))}"
+        f"{item.quantity} x {_money(item.price)} = {_money(item.value)}"
     )
-
-
-def _value(item):
-    return item.quantity * item.price
 
 
 def _money(amount):

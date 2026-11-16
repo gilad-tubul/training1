@@ -37,7 +37,7 @@ class Inventory:
             del self.items[sku]
 
     def total_value(self):
-        return sum(i.quantity * i.price for i in self.items.values())
+        return sum(i.value for i in self.items.values())
 
     def low_stock(self, threshold=5):
         """Return items whose quantity is at or below the threshold."""
