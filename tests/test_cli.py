@@ -1,7 +1,11 @@
+import csv
 import io
+import json
+import subprocess
+import sys
 import tempfile
 import unittest
-from contextlib import redirect_stderr
+from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 from inventory.cli import main
@@ -67,6 +71,54 @@ class TestCliErrors(unittest.TestCase):
 
     def test_unknown_field_prints_error(self):
         self.check_bad_file('[{"sku": "A", "name": "x", "quantity": 1, "price": 1, "colour": "red"}]')
+
+
+class TestCliExport(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.file = str(self.dir / "inv.json")
+        main(["--file", self.file, "add", "A1", "Blue Widget", "5", "2.50"])
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_export_writes_csv_file(self):
+        out = self.dir / "out.csv"
+        out.write_text("old contents")
+        self.assertEqual(main(["--file", self.file, "export", "--csv", str(out)]), 0)
+        with open(out, newline="", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        self.assertEqual([(r["sku"], r["quantity"]) for r in rows], [("A1", "5")])
+
+    def test_export_to_stdout(self):
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            code = main(["--file", self.file, "export", "--csv", "-"])
+        self.assertEqual(code, 0)
+        self.assertEqual(buf.getvalue().splitlines()[1], "A1,Blue Widget,5,2.5,general")
+
+    def test_export_to_missing_folder_prints_error(self):
+        err = io.StringIO()
+        with redirect_stderr(err):
+            code = main(["--file", self.file, "export", "--csv", str(self.dir / "nope" / "out.csv")])
+        self.assertEqual(code, 1)
+        self.assertTrue(err.getvalue().startswith("error: [Errno 2] No such file or directory"), err.getvalue())
+        self.assertEqual(err.getvalue().count("\n"), 1)
+
+
+    def test_export_piped_into_head_exits_quietly(self):
+        # 3000 rows is far more than `head -2` reads, so the pipe closes early.
+        rows = [{"sku": f"S{n:04}", "name": "Bulk", "quantity": 1, "price": 1.0,
+                 "category": "general"} for n in range(3000)]
+        Path(self.file).write_text(json.dumps(rows))
+        result = subprocess.run(
+            f"{sys.executable} -m inventory.cli --file {self.file} export --csv - | head -2",
+            shell=True, capture_output=True, text=True,
+            cwd=Path(__file__).resolve().parent.parent,
+        )
+        self.assertEqual(result.stdout.splitlines()[0], "sku,name,quantity,price,category")
+        self.assertEqual(result.stderr, "")
 
 
 if __name__ == "__main__":
