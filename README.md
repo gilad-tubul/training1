@@ -12,6 +12,15 @@ python3 -m inventory.cli list
 python3 -m inventory.cli report
 ```
 
+### Sample data
+
+`examples/nba-tshirts.json` holds 13 NBA player T-shirts across 9 categories. To start from it:
+
+```bash
+cp examples/nba-tshirts.json inventory.json
+python3 -m inventory.cli report
+```
+
 Then open `EXERCISES.md` and work through the levels. Each level teaches a different Claude Code skill.
 
 Tip: commit after each exercise (or ask Claude to) so you can always `git diff` / `git reset` back.
