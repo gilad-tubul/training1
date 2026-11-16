@@ -1,28 +1,40 @@
-# This module works, but it is messy on purpose. See EXERCISES.md.
+"""Plain-text inventory report, grouped by category."""
+
+from collections import defaultdict
 
 
 def build_report(inventory):
-    lines = []
-    lines.append("INVENTORY REPORT")
-    lines.append("================")
-    cats = []
-    for i in inventory.items.values():
-        if i.category not in cats:
-            cats.append(i.category)
-    cats.sort()
-    for c in cats:
-        lines.append("")
-        lines.append("[" + c + "]")
-        t = 0
-        for i in sorted(inventory.items.values(), key=lambda x: x.name):
-            if i.category == c:
-                v = i.quantity * i.price
-                t = t + v
-                lines.append("  " + i.name + " (" + i.sku + "): " + str(i.quantity) + " x $" + "%.2f" % i.price + " = $" + "%.2f" % v)
-        lines.append("  subtotal: $" + "%.2f" % t)
-    lines.append("")
-    tt = 0
-    for i in inventory.items.values():
-        tt = tt + i.quantity * i.price
-    lines.append("TOTAL: $" + "%.2f" % tt)
+    """Return a report listing items by category, with subtotals and a total."""
+    lines = ["INVENTORY REPORT", "================"]
+
+    for category, items in sorted(_group_by_category(inventory).items()):
+        lines += ["", f"[{category}]"]
+        lines += [_item_line(item) for item in items]
+        subtotal = sum(_value(item) for item in items)
+        lines.append(f"  subtotal: {_money(subtotal)}")
+
+    lines += ["", f"TOTAL: {_money(inventory.total_value())}"]
     return "\n".join(lines)
+
+
+def _group_by_category(inventory):
+    """Map each category to its items, sorted by name."""
+    groups = defaultdict(list)
+    for item in sorted(inventory.items.values(), key=lambda i: i.name):
+        groups[item.category].append(item)
+    return groups
+
+
+def _item_line(item):
+    return (
+        f"  {item.name} ({item.sku}): "
+        f"{item.quantity} x {_money(item.price)} = {_money(_value(item))}"
+    )
+
+
+def _value(item):
+    return item.quantity * item.price
+
+
+def _money(amount):
+    return f"${amount:.2f}"
