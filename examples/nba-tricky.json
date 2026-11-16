@@ -1,0 +1,268 @@
+[
+  {
+    "sku": "NBA-LBJ-23",
+    "name": "LeBron James #23 T-Shirt",
+    "quantity": 31,
+    "price": 34.99,
+    "category": "lakers"
+  },
+  {
+    "sku": "NBA-LUK-77",
+    "name": "Luka Doncic #77 T-Shirt",
+    "quantity": 18,
+    "price": 34.99,
+    "category": "lakers"
+  },
+  {
+    "sku": "NBA-STC-30",
+    "name": "Stephen Curry #30 T-Shirt",
+    "quantity": 30,
+    "price": 34.99,
+    "category": "warriors"
+  },
+  {
+    "sku": "NBA-GSA-34",
+    "name": "Giannis Antetokounmpo #34 T-Shirt",
+    "quantity": 12,
+    "price": 32.99,
+    "category": "bucks"
+  },
+  {
+    "sku": "NBA-JOK-15",
+    "name": "Nikola Jokic #15 T-Shirt",
+    "quantity": 9,
+    "price": 32.99,
+    "category": "nuggets"
+  },
+  {
+    "sku": "NBA-SGA-02",
+    "name": "Shai Gilgeous-Alexander #2 T-Shirt",
+    "quantity": 15,
+    "price": 32.99,
+    "category": "thunder"
+  },
+  {
+    "sku": "NBA-WEM-01",
+    "name": "Victor Wembanyama #1 T-Shirt",
+    "quantity": 4,
+    "price": 36.99,
+    "category": "spurs"
+  },
+  {
+    "sku": "NBA-TAT-00",
+    "name": "Jayson Tatum #0 T-Shirt",
+    "quantity": 14,
+    "price": 32.99,
+    "category": "celtics"
+  },
+  {
+    "sku": "NBA-KDU-35",
+    "name": "Kevin Durant #35 T-Shirt",
+    "quantity": 6,
+    "price": 32.99,
+    "category": "rockets"
+  },
+  {
+    "sku": "NBA-MJ-23",
+    "name": "Michael Jordan #23 Retro T-Shirt",
+    "quantity": 8,
+    "price": 44.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-KOB-24",
+    "name": "Kobe Bryant #24 Retro T-Shirt",
+    "quantity": 5,
+    "price": 44.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-MAG-32",
+    "name": "Magic Johnson #32 Retro T-Shirt",
+    "quantity": 3,
+    "price": 39.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-BIR-33",
+    "name": "Larry Bird #33 Retro T-Shirt",
+    "quantity": 2,
+    "price": 39.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-ANT-05",
+    "name": "Anthony Edwards #5 T-Shirt",
+    "quantity": 20,
+    "price": 32.99,
+    "category": "timberwolves"
+  },
+  {
+    "sku": "NBA-JBR-11",
+    "name": "Jalen Brunson #11 T-Shirt",
+    "quantity": 16,
+    "price": 32.99,
+    "category": "knicks"
+  },
+  {
+    "sku": "NBA-DBO-01",
+    "name": "Devin Booker #1 T-Shirt",
+    "quantity": 11,
+    "price": 32.99,
+    "category": "suns"
+  },
+  {
+    "sku": "NBA-JEM-21",
+    "name": "Joel Embiid #21 T-Shirt",
+    "quantity": 7,
+    "price": 32.99,
+    "category": "76ers"
+  },
+  {
+    "sku": "NBA-AD-03",
+    "name": "Anthony Davis #3 T-Shirt",
+    "quantity": 10,
+    "price": 32.99,
+    "category": "mavericks"
+  },
+  {
+    "sku": "NBA-JMO-12",
+    "name": "Ja Morant #12 T-Shirt",
+    "quantity": 5,
+    "price": 32.99,
+    "category": "grizzlies"
+  },
+  {
+    "sku": "NBA-SHQ-34",
+    "name": "Shaquille O'Neal #34 Retro T-Shirt",
+    "quantity": 6,
+    "price": 42.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-TDU-21",
+    "name": "Tim Duncan #21 Retro T-Shirt",
+    "quantity": 4,
+    "price": 39.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-DIR-41",
+    "name": "Dirk Nowitzki #41 Retro T-Shirt",
+    "quantity": 3,
+    "price": 39.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-AIV-03",
+    "name": "Allen Iverson #3 Retro T-Shirt",
+    "quantity": 1,
+    "price": 44.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-KAJ-33",
+    "name": "Kareem Abdul-Jabbar #33 Retro T-Shirt",
+    "quantity": 2,
+    "price": 44.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-LUK-77X",
+    "name": "Luka Don\u010di\u0107 #77 T-Shirt (accented)",
+    "quantity": 3,
+    "price": 34.99,
+    "category": "lakers"
+  },
+  {
+    "sku": "NBA-JOK-15X",
+    "name": "Nikola Joki\u0107 \u2014 MVP Edition \ud83c\udfc6",
+    "quantity": 2,
+    "price": 49.99,
+    "category": "nuggets"
+  },
+  {
+    "sku": "NBA-STC-30Q",
+    "name": "Stephen \"Chef\" Curry, #30 T-Shirt",
+    "quantity": 5,
+    "price": 34.99,
+    "category": "warriors"
+  },
+  {
+    "sku": "NBA-MJ-23F",
+    "name": "=HYPERLINK(\"http://example.com\",\"MJ\")",
+    "quantity": 1,
+    "price": 44.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-GSA-34L",
+    "name": "Giannis Line1\nLine2 T-Shirt",
+    "quantity": 1,
+    "price": 32.99,
+    "category": "bucks"
+  },
+  {
+    "sku": "NBA-LBJ-23S",
+    "name": "  LeBron James #23 T-Shirt  ",
+    "quantity": 2,
+    "price": 34.99,
+    "category": "lakers"
+  },
+  {
+    "sku": "NBA-LBJ-6",
+    "name": "LeBron James #6 T-Shirt",
+    "quantity": 4,
+    "price": 34.99,
+    "category": "Lakers"
+  },
+  {
+    "sku": "NBA LBJ 6",
+    "name": "LeBron James #6 (SKU has spaces)",
+    "quantity": 1,
+    "price": 34.99,
+    "category": "lakers"
+  },
+  {
+    "sku": "NBA-WEM-01L",
+    "name": "Victor Wembanyama #1 Spurs Rookie Season Limited Edition Commemorative Embroidered Heavyweight T-Shirt",
+    "quantity": 1,
+    "price": 99.99,
+    "category": "spurs"
+  },
+  {
+    "sku": "NBA-BUL-96",
+    "name": "1996 Bulls Championship T-Shirt",
+    "quantity": 0,
+    "price": 29.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-FREE-00",
+    "name": "Promo Giveaway T-Shirt",
+    "quantity": 500,
+    "price": 0.0,
+    "category": "promo"
+  },
+  {
+    "sku": "NBA-PRC-99",
+    "name": "Odd Price T-Shirt",
+    "quantity": 3,
+    "price": 19.999,
+    "category": "promo"
+  },
+  {
+    "sku": "NBA-BIG-99",
+    "name": "Bulk Order T-Shirt",
+    "quantity": 1000000,
+    "price": 0.01,
+    "category": "promo"
+  },
+  {
+    "sku": "NBA-EMP-00",
+    "name": "",
+    "quantity": 1,
+    "price": 10.0,
+    "category": ""
+  }
+]

@@ -89,5 +89,82 @@
     "quantity": 2,
     "price": 39.99,
     "category": "legends"
+  },
+  {
+    "sku": "NBA-ANT-05",
+    "name": "Anthony Edwards #5 T-Shirt",
+    "quantity": 20,
+    "price": 32.99,
+    "category": "timberwolves"
+  },
+  {
+    "sku": "NBA-JBR-11",
+    "name": "Jalen Brunson #11 T-Shirt",
+    "quantity": 16,
+    "price": 32.99,
+    "category": "knicks"
+  },
+  {
+    "sku": "NBA-DBO-01",
+    "name": "Devin Booker #1 T-Shirt",
+    "quantity": 11,
+    "price": 32.99,
+    "category": "suns"
+  },
+  {
+    "sku": "NBA-JEM-21",
+    "name": "Joel Embiid #21 T-Shirt",
+    "quantity": 7,
+    "price": 32.99,
+    "category": "76ers"
+  },
+  {
+    "sku": "NBA-AD-03",
+    "name": "Anthony Davis #3 T-Shirt",
+    "quantity": 10,
+    "price": 32.99,
+    "category": "mavericks"
+  },
+  {
+    "sku": "NBA-JMO-12",
+    "name": "Ja Morant #12 T-Shirt",
+    "quantity": 5,
+    "price": 32.99,
+    "category": "grizzlies"
+  },
+  {
+    "sku": "NBA-SHQ-34",
+    "name": "Shaquille O'Neal #34 Retro T-Shirt",
+    "quantity": 6,
+    "price": 42.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-TDU-21",
+    "name": "Tim Duncan #21 Retro T-Shirt",
+    "quantity": 4,
+    "price": 39.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-DIR-41",
+    "name": "Dirk Nowitzki #41 Retro T-Shirt",
+    "quantity": 3,
+    "price": 39.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-AIV-03",
+    "name": "Allen Iverson #3 Retro T-Shirt",
+    "quantity": 1,
+    "price": 44.99,
+    "category": "legends"
+  },
+  {
+    "sku": "NBA-KAJ-33",
+    "name": "Kareem Abdul-Jabbar #33 Retro T-Shirt",
+    "quantity": 2,
+    "price": 44.99,
+    "category": "legends"
   }
 ]

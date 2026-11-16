@@ -14,7 +14,12 @@ python3 -m inventory.cli report
 
 ### Sample data
 
-`examples/nba-tshirts.json` holds 13 NBA player T-shirts across 9 categories. To start from it:
+- `examples/nba-tshirts.json`: 24 NBA player T-shirts, clean data.
+- `examples/nba-tricky.json`: the same plus 14 tricky entries (accents, emoji, quotes and commas,
+  a newline in a name, a spreadsheet formula, an empty name, a zero quantity, a `Lakers`/`lakers`
+  category split, and more). Good for testing the report, search and the planned CSV export.
+
+To start from one:
 
 ```bash
 cp examples/nba-tshirts.json inventory.json
