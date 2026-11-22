@@ -6,7 +6,7 @@ It has **planted bugs**, **messy code**, and **missing features** for you to fix
 ## Quick start
 
 ```bash
-python3 -m unittest                      # run tests (3 fail on purpose)
+python3 -m unittest                      # run tests
 python3 -m inventory.cli add A1 "Blue Widget" 10 2.50 --category widgets
 python3 -m inventory.cli list
 python3 -m inventory.cli report
