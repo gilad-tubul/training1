@@ -29,6 +29,8 @@ To start from one:
 cp examples/nba-tshirts.json inventory.json
 python3 -m inventory.cli report
 python3 -m inventory.cli export --csv out.csv   # or --csv - to print it
+python3 -m inventory.cli import --csv out.csv --replace   # load an edited export back
+python3 -m inventory.cli import --csv new-stock.csv       # or add stock from a CSV
 ```
 
 Then open `EXERCISES.md` and work through the levels. Each level teaches a different Claude Code skill.

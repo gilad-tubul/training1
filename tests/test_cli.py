@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
@@ -133,6 +134,97 @@ class TestCliExport(unittest.TestCase):
         )
         self.assertEqual(result.stdout.splitlines()[0], "sku,name,quantity,price,category")
         self.assertEqual(result.stderr, "")
+
+
+class TestCliImport(unittest.TestCase):
+    HEADER = "sku,name,quantity,price,category\n"
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.dir = Path(self.tmp.name)
+        self.file = str(self.dir / "inv.json")
+        main(["--file", self.file, "add", "A1", "Blue Widget", "5", "2.50", "--category", "widgets"])
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def csv_file(self, rows):
+        path = self.dir / "in.csv"
+        path.write_text(self.HEADER + rows, encoding="utf-8")
+        return str(path)
+
+    def run_cli(self, *args):
+        out, err = io.StringIO(), io.StringIO()
+        with redirect_stdout(out), redirect_stderr(err):
+            code = main(["--file", self.file, *args])
+        return code, out.getvalue(), err.getvalue()
+
+    def stock(self):
+        return {r["sku"]: r["quantity"] for r in json.loads(Path(self.file).read_text())}
+
+    def test_import_adds_to_existing_stock(self):
+        path = self.csv_file("A1,Blue Widget,3,2.50,widgets\nB1,Steel Bolt,100,0.10,hardware\n")
+        code, out, err = self.run_cli("import", "--csv", path)
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual(self.stock(), {"A1": 8, "B1": 100})
+        self.assertEqual(out, f"Imported 2 rows from {path} (1 new item, 1 updated)\n")
+
+    def test_import_replace_makes_csv_the_inventory(self):
+        path = self.csv_file("A1,Blue Widget,3,2.99,widgets\nB1,Steel Bolt,100,0.10,hardware\n")
+        code, out, err = self.run_cli("import", "--csv", path, "--replace")
+        self.assertEqual((code, err), (0, ""))
+        rows = {r["sku"]: r for r in json.loads(Path(self.file).read_text())}
+        self.assertEqual({sku: (r["quantity"], r["price"]) for sku, r in rows.items()},
+                         {"A1": (3, 2.99), "B1": (100, 0.1)})
+        self.assertEqual(out, f"Replaced inventory with 2 items from {path}\n")
+
+    def test_export_then_replace_import_is_lossless(self):
+        exported = str(self.dir / "out.csv")
+        self.run_cli("add", "B1", "Bolt, \"steel\"", "7", "0.10")
+        before = Path(self.file).read_text()
+        self.run_cli("export", "--csv", exported)
+        code, _, err = self.run_cli("import", "--csv", exported, "--replace")
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual(json.loads(Path(self.file).read_text()), json.loads(before))
+
+    def test_conflicting_row_saves_nothing_and_names_the_line(self):
+        before = Path(self.file).read_text()
+        path = self.csv_file("B1,Steel Bolt,100,0.10,hardware\nA1,Blue Widget,1,9.99,widgets\n")
+        code, out, err = self.run_cli("import", "--csv", path)
+        self.assertEqual((code, out), (1, ""))
+        self.assertTrue(err.startswith(f"error: {path} line 3: SKU A1 is already"), err)
+        self.assertEqual(Path(self.file).read_text(), before)
+
+    def test_invalid_row_saves_nothing_even_with_replace(self):
+        before = Path(self.file).read_text()
+        path = self.csv_file("B1,Steel Bolt,100,0.10,hardware\nC1,Cog,-1,1.00,parts\n")
+        code, _, err = self.run_cli("import", "--csv", path, "--replace")
+        self.assertEqual(code, 1)
+        self.assertIn("line 3", err)
+        self.assertEqual(Path(self.file).read_text(), before)
+
+    def test_import_without_category_keeps_existing_categories(self):
+        path = self.dir / "nocat.csv"
+        path.write_text("sku,name,quantity,price\nA1,Blue Widget,1,2.50\nB1,Steel Bolt,1,0.10\n")
+        for extra in ([], ["--replace"]):
+            with self.subTest(args=extra):
+                code, _, err = self.run_cli("import", "--csv", str(path), *extra)
+                self.assertEqual((code, err), (0, ""))
+                rows = {r["sku"]: r["category"] for r in json.loads(Path(self.file).read_text())}
+                self.assertEqual(rows, {"A1": "widgets", "B1": "general"})
+
+    def test_import_from_stdin(self):
+        stdin = io.StringIO(self.HEADER + "B1,Steel Bolt,1,0.10,hardware\n")
+        with unittest.mock.patch("sys.stdin", stdin):
+            code, out, err = self.run_cli("import", "--csv", "-")
+        self.assertEqual((code, err), (0, ""))
+        self.assertEqual(self.stock(), {"A1": 5, "B1": 1})
+        self.assertIn("from standard input", out)
+
+    def test_missing_csv_file_prints_error(self):
+        code, _, err = self.run_cli("import", "--csv", str(self.dir / "nope.csv"))
+        self.assertEqual(code, 1)
+        self.assertTrue(err.startswith("error: [Errno 2] No such file or directory"), err)
 
 
 if __name__ == "__main__":

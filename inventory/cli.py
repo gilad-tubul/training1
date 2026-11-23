@@ -4,6 +4,7 @@ import sys
 from pathlib import Path
 
 from .export import write_csv
+from .importer import read_csv
 from .models import Item
 from .report import build_report
 from .store import Inventory
@@ -44,6 +45,12 @@ def main(argv=None):
     export.add_argument("--csv", required=True, metavar="PATH",
                         help="CSV file to write (overwritten), or - for standard output")
 
+    import_ = sub.add_parser("import", help="add stock from a file, or replace the inventory")
+    import_.add_argument("--csv", required=True, metavar="PATH",
+                         help="CSV file to read, or - for standard input")
+    import_.add_argument("--replace", action="store_true",
+                         help="make the file the whole inventory instead of adding to it")
+
     args = parser.parse_args(argv)
     try:
         _run(args)
@@ -65,10 +72,7 @@ def _run(args):
     inv = _load(args.file)
 
     if args.command == "add":
-        category = args.category
-        if category is None:
-            existing = inv.items.get(args.sku.strip())
-            category = existing.category if existing else "general"
+        category = args.category or _existing_category(inv, args.sku.strip())
         inv.add_item(Item(args.sku, args.name, args.quantity, args.price, category))
         inv.save(args.file)
     elif args.command == "remove":
@@ -85,6 +89,50 @@ def _run(args):
         else:
             with open(args.csv, "w", newline="", encoding="utf-8") as f:
                 write_csv(inv, f)
+    elif args.command == "import":
+        _import_csv(inv, args)
+
+
+def _import_csv(inv, args):
+    """Apply every row or none: nothing is saved if any row is invalid or conflicts."""
+    def read(file, label):
+        try:
+            return read_csv(file, default_category=lambda sku: _existing_category(inv, sku))
+        except ValueError as e:
+            raise ValueError(f"{label} {e}") from e
+
+    if args.csv == "-":
+        label, rows = "standard input", read(sys.stdin, "standard input")
+    else:
+        label = args.csv
+        with open(args.csv, newline="", encoding="utf-8-sig") as f:
+            rows = read(f, label)
+
+    target = Inventory() if args.replace else inv
+    new = 0
+    for line, item in rows:
+        new += item.sku not in target.items
+        try:
+            target.add_item(item)
+        except ValueError as e:
+            raise ValueError(f"{label} line {line}: {e}") from e
+    target.save(args.file)
+
+    if args.replace:
+        print(f"Replaced inventory with {_count(len(rows), 'item')} from {label}")
+    else:
+        print(f"Imported {_count(len(rows), 'row')} from {label} "
+              f"({_count(new, 'new item')}, {len(rows) - new} updated)")
+
+
+def _existing_category(inv, sku):
+    """Category to use when none is given: the existing item's, or "general"."""
+    existing = inv.items.get(sku)
+    return existing.category if existing else "general"
+
+
+def _count(n, noun):
+    return f"{n} {noun}" if n == 1 else f"{n} {noun}s"
 
 
 if __name__ == "__main__":
