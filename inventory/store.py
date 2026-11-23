@@ -1,4 +1,5 @@
 import json
+import unicodedata
 from pathlib import Path
 
 from .models import Item
@@ -13,10 +14,9 @@ class Inventory:
     def add_item(self, item):
         if item.sku in self.items:
             existing = self.items[item.sku]
-            if (item.name, item.price) != (existing.name, existing.price):
+            if _details(item) != _details(existing):
                 raise ValueError(
-                    f"SKU {item.sku} is already {existing.name!r} at "
-                    f"${existing.price:.2f}; got {item.name!r} at ${item.price:.2f}"
+                    f"SKU {item.sku} is already {_describe(existing)}; got {_describe(item)}"
                 )
             existing.quantity += item.quantity
         else:
@@ -44,9 +44,9 @@ class Inventory:
         return [i for i in self.items.values() if i.quantity <= threshold]
 
     def search(self, text):
-        """Find items whose name contains text, ignoring case."""
-        needle = text.lower()
-        return [i for i in self.items.values() if needle in i.name.lower()]
+        """Find items whose name contains text, ignoring case and accents."""
+        needle = _fold(text)
+        return [i for i in self.items.values() if needle in _fold(i.name)]
 
     def save(self, path):
         data = [i.to_dict() for i in self.items.values()]
@@ -58,3 +58,17 @@ class Inventory:
         for row in json.loads(Path(path).read_text()):
             inv.add_item(Item.from_dict(row))
         return inv
+
+
+def _details(item):
+    return item.name, item.price, item.category
+
+
+def _describe(item):
+    return f"{item.name!r} at ${item.price:.2f}, category {item.category!r}"
+
+
+def _fold(text):
+    """Lowercase and strip accents, so "DONČIĆ" matches "doncic"."""
+    decomposed = unicodedata.normalize("NFKD", text)
+    return "".join(ch for ch in decomposed if not unicodedata.combining(ch)).casefold()

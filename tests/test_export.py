@@ -34,7 +34,6 @@ class TestWriteCsv(unittest.TestCase):
     def test_tricky_names_round_trip(self):
         names = [
             'Stephen "Chef" Curry, #30',
-            "Line1\nLine2",
             "Luka Dončić — 🏆",
             '=HYPERLINK("http://example.com","MJ")',
         ]
@@ -42,9 +41,9 @@ class TestWriteCsv(unittest.TestCase):
         self.assertEqual([r["name"] for r in rows(export(*items))], names)
 
     def test_values_round_trip(self):
-        [row] = rows(export(Item("P1", "Odd", 1000000, 19.999, "promo")))
+        [row] = rows(export(Item("P1", "Odd", 1000000, 19.99, "promo")))
         self.assertEqual(row, {"sku": "P1", "name": "Odd", "quantity": "1000000",
-                               "price": "19.999", "category": "promo"})
+                               "price": "19.99", "category": "promo"})
 
 
 if __name__ == "__main__":

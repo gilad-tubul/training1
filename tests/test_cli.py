@@ -45,6 +45,20 @@ class TestCliErrors(unittest.TestCase):
         code, err = self.run_cli("remove", "A1", "2")
         self.assertEqual((code, err), (0, ""))
 
+    def test_readd_without_category_keeps_existing_category(self):
+        main(["--file", self.file, "add", "W1", "Wid", "1", "1.00", "--category", "tools"])
+        code, err = self.run_cli("add", "W1", "Wid", "2", "1.00")
+        self.assertEqual((code, err), (0, ""))
+        self.assertIn('"category": "tools"', Path(self.file).read_text())
+
+    def test_new_item_without_category_is_general(self):
+        self.assertIn('"category": "general"', Path(self.file).read_text())
+
+    def test_readd_with_different_category_prints_error(self):
+        code, err = self.run_cli("add", "A1", "Blue Widget", "1", "2.50", "--category", "heat")
+        self.assertEqual(code, 1)
+        self.assertIn("category", err)
+
     def test_add_invalid_item_prints_error(self):
         code, err = self.run_cli("add", "B1", "Bolt", "-5", "0.10")
         self.assertEqual(code, 1)

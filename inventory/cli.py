@@ -31,7 +31,7 @@ def main(argv=None):
     add.add_argument("name")
     add.add_argument("quantity", type=int)
     add.add_argument("price", type=float)
-    add.add_argument("--category", default="general")
+    add.add_argument("--category", help="defaults to the existing item's category, or general")
 
     remove = sub.add_parser("remove", help="remove stock")
     remove.add_argument("sku")
@@ -65,7 +65,11 @@ def _run(args):
     inv = _load(args.file)
 
     if args.command == "add":
-        inv.add_item(Item(args.sku, args.name, args.quantity, args.price, args.category))
+        category = args.category
+        if category is None:
+            existing = inv.items.get(args.sku.strip())
+            category = existing.category if existing else "general"
+        inv.add_item(Item(args.sku, args.name, args.quantity, args.price, category))
         inv.save(args.file)
     elif args.command == "remove":
         inv.remove_item(args.sku, args.quantity)
