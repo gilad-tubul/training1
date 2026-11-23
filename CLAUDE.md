@@ -6,9 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A small inventory tracker in pure Python (standard library only, Python 3.10+), used as a
 sandbox for practicing with Claude Code. `EXERCISES.md` lists the practice levels the user
-works through. Some known issues are deliberately left open for later exercises (e.g. names with
-line breaks or surrounding spaces, empty names, `Lakers`/`lakers` treated as separate categories,
-accent-insensitive search), so fix only what the user asks for and mention anything else you notice.
+works through, so fix only what the user asks for and mention anything else you notice.
 
 ## Rules
 
@@ -32,13 +30,16 @@ tracked sample data; `*.csv` is git-ignored.
 
 Layers depend downward only: `cli` → `report` / `export` → `store` → `models`.
 
-- **`models.Item`** is the single place for data validation. `__post_init__` rejects negative
-  quantities and negative or non-finite prices, so input from the CLI, `add_item` and JSON
-  loading is all checked there. `Item.value` (quantity × price) is the one definition of an
+- **`models.Item`** is the single place for data validation and normalization. `__post_init__`
+  trims text fields, lowercases the category, and rejects empty text, control characters
+  (including line breaks), spaces in the SKU, negative quantities, and prices that are negative,
+  non-finite or have fractions of a cent. Input from the CLI, `add_item` and JSON loading is all
+  checked there, so a saved file with one invalid entry fails to load as a whole. `Item.value` (quantity × price) is the one definition of an
   item's value; use it rather than recomputing.
 - **`store.Inventory`** holds items in a dict keyed by SKU and persists them as a JSON list.
-  Re-adding an existing SKU merges quantities but raises if the name or price differs
-  (category is intentionally not compared). Removing down to 0 deletes the item.
+  Re-adding an existing SKU merges quantities but raises if the name, price or category differs.
+  The CLI's `add --category` defaults to the existing item's category (or `general` for a new
+  SKU), so re-adding stock doesn't require repeating it. `search` ignores case and accents. Removing down to 0 deletes the item.
 - **Error contract:** library code raises `KeyError` (unknown SKU) or `ValueError` (bad input).
   `cli.main()` has the only error handler: it prints a one-line `error: ...` to stderr and
   returns exit code 1, also for `OSError`, and exits quietly on `BrokenPipeError`. Argparse

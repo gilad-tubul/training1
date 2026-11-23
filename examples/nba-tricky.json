@@ -196,15 +196,8 @@
     "category": "legends"
   },
   {
-    "sku": "NBA-GSA-34L",
-    "name": "Giannis Line1\nLine2 T-Shirt",
-    "quantity": 1,
-    "price": 32.99,
-    "category": "bucks"
-  },
-  {
     "sku": "NBA-LBJ-23S",
-    "name": "  LeBron James #23 T-Shirt  ",
+    "name": "LeBron James #23 T-Shirt",
     "quantity": 2,
     "price": 34.99,
     "category": "lakers"
@@ -213,13 +206,6 @@
     "sku": "NBA-LBJ-6",
     "name": "LeBron James #6 T-Shirt",
     "quantity": 4,
-    "price": 34.99,
-    "category": "Lakers"
-  },
-  {
-    "sku": "NBA LBJ 6",
-    "name": "LeBron James #6 (SKU has spaces)",
-    "quantity": 1,
     "price": 34.99,
     "category": "lakers"
   },
@@ -245,24 +231,10 @@
     "category": "promo"
   },
   {
-    "sku": "NBA-PRC-99",
-    "name": "Odd Price T-Shirt",
-    "quantity": 3,
-    "price": 19.999,
-    "category": "promo"
-  },
-  {
     "sku": "NBA-BIG-99",
     "name": "Bulk Order T-Shirt",
     "quantity": 1000000,
     "price": 0.01,
     "category": "promo"
-  },
-  {
-    "sku": "NBA-EMP-00",
-    "name": "",
-    "quantity": 1,
-    "price": 10.0,
-    "category": ""
   }
 ]

@@ -15,9 +15,13 @@ python3 -m inventory.cli report
 ### Sample data
 
 - `examples/nba-tshirts.json`: 24 NBA player T-shirts, clean data.
-- `examples/nba-tricky.json`: the same plus 14 tricky entries (accents, emoji, quotes and commas,
-  a newline in a name, a spreadsheet formula, an empty name, a zero quantity, a `Lakers`/`lakers`
-  category split, and more). Good for testing the report, search and the CSV export.
+- `examples/nba-tricky.json`: the same plus 10 tricky but valid entries (accents, emoji, quotes
+  and commas, a spreadsheet formula, a very long name, a zero quantity, a zero price, a huge
+  quantity). Good for testing the report, search and the CSV export.
+
+Inputs the app rejects or cleans up are covered by `tests/test_store.py` (`TestTrickyInputs`):
+line breaks or control characters, empty names, spaces in a SKU and sub-cent prices are
+rejected; surrounding spaces are trimmed and categories are lowercased.
 
 To start from one:
 
