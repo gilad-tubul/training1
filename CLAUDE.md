@@ -51,6 +51,12 @@ Layers depend downward only: `cli` → `report` / `export` → `store` → `mode
 - **`export.write_csv`** takes an open file object (tests use `io.StringIO`). Columns come
   from the `Item` dataclass fields, so a new field becomes a new column automatically. Rows are
   sorted by SKU. Files must be opened with `newline=""` and `encoding="utf-8"`.
+- **`importer.read_csv`** is the inverse: it returns `(line number, Item)` pairs and raises
+  `ValueError("header: ...")` or `ValueError("line N: ...")`, which the CLI prefixes with the file
+  name. Headers are case-insensitive in any order; `category` is optional and resolved through a
+  `default_category(sku)` callback (the CLI passes the existing item's category, as `add` does).
+  `cli import` applies all rows or none: the default adds stock via `add_item`, `--replace` makes
+  the file the whole inventory. Open import files with `encoding="utf-8-sig"` to drop Excel's BOM.
 
 ## Tests
 
