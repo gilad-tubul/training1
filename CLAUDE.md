@@ -10,6 +10,10 @@ works through. Some known issues are deliberately left open for later exercises 
 line breaks or surrounding spaces, empty names, `Lakers`/`lakers` treated as separate categories,
 accent-insensitive search), so fix only what the user asks for and mention anything else you notice.
 
+## Rules
+
+- Never push directly to `main`. Do all work on a branch and push that branch.
+
 ## Commands
 
 ```bash
